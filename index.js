@@ -30,7 +30,7 @@ class TemplateCachePlugin {
             this.options.baseFolders.forEach(baseFolder => {
               var files = glob.sync(baseFolder + "**/*.html", {});
               for (var filename of files) {
-                if (filename.substr(-4) === 'html') {
+                if (filename.substr(-4) === 'html' && !/bower_components/.test(filename)) {
                   let fullpath = path.resolve(filename);
                   // adds this file to being watched by webpack for a rebuild
                   compilation.fileDependencies.add(fullpath);
