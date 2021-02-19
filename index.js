@@ -58,7 +58,7 @@ class TemplateCachePlugin {
             filelist += '}]),500);';
 
             // Insert this list into the Webpack build as a new file asset:
-            this._insertOutput(compilation, 'templates.js', filelist);
+            this._insertOutput(compilation, this.options.output, filelist);
 
             cb();
           });
@@ -67,15 +67,17 @@ class TemplateCachePlugin {
   }
 
   _insertOutput(compilation, filename, source) {
-    const chunk = new Chunk("templates.js");
-    chunk.id = "templates.js";
+    const split = filename.split('/');
+    const chunkName = split[split.length-1];
+    const chunk = new Chunk(chunkName);
+    chunk.id = chunkName;
     chunk.ids = [chunk.id];
     chunk.files.push(filename);
 
-    const entrypoint = new EntryPoint("templates.js");
+    const entrypoint = new EntryPoint(chunkName);
     entrypoint.pushChunk(chunk);
 
-    compilation.entrypoints.set("templates.js", entrypoint);
+    compilation.entrypoints.set(chunkName, entrypoint);
     compilation.chunks.push(chunk);
     compilation.assets[filename] = new RawSource(source);
   }
