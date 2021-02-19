@@ -25,7 +25,7 @@ class TemplateCachePlugin {
         compilation.hooks.additionalAssets.tapAsync(
           'TemplateCachePlugin',
           (cb) => {
-            var filelist = 'angular.module("' + this.options.moduleName + '").run(["$templateCache",function($templateCache){"use strict";';
+            var filelist = 'setTimeout(()=>angular.module("' + this.options.moduleName + '").run(["$templateCache",function($templateCache){"use strict";';
 
             this.options.baseFolders.forEach(baseFolder => {
               var files = glob.sync(baseFolder + "**/*.html", {});
@@ -55,7 +55,7 @@ class TemplateCachePlugin {
 
             });
 
-            filelist += '}]);';
+            filelist += '}]),500);';
 
             // Insert this list into the Webpack build as a new file asset:
             this._insertOutput(compilation, 'templates.js', filelist);
